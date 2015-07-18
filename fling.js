@@ -135,7 +135,7 @@ function Sign(X) {
   return (X > 0 ? 1 : (X < 0 ? -1 : 0));
 }
 
-Container.addEventListener("mousedown", function(Ev) {
+Container.addEventListener("mousedown touchstart", function(Ev) {
   Down = true;
   LastPos = Ev.clientX;
   DownScroll = CurrentScroll;
@@ -145,7 +145,7 @@ Container.addEventListener("mousedown", function(Ev) {
   Direction = 0;
 });
 
-Body.addEventListener("mouseup", function() {
+Body.addEventListener("mouseup touchend", function() {
   Down = false;
   LastPos = null;
   if (Velocity > 0 && GetTime() - LastTime < 0.1) {
@@ -181,7 +181,7 @@ Body.addEventListener("mouseup", function() {
   }
 });
 
-Body.addEventListener("mousemove", function(Ev) {
+Body.addEventListener("mousemove touchmove", function(Ev) {
   if (Down) {
     var Pos = Ev.clientX;
     var Diff = Pos - LastPos;
