@@ -85,12 +85,9 @@ function DrawFn(Fn, StartX, EndX, StartY, EndY) {
 }
 
 var Velocity = 100;
-var Deceleration = 3000;
+var Deceleration = 10000;
 
 DrawFn(FlingVel(Velocity, Deceleration), 0, GetFlingDuration(Velocity, Deceleration), -2, Velocity+5);
-console.log(GetFlingFinalPosition(Velocity, Deceleration));
-console.log(GetFlingVelocityForTarget(Deceleration, GetFlingFinalPosition(Velocity, Deceleration)));
-console.log(GetFlingFinalPosition(GetFlingVelocityForTarget(Deceleration, GetFlingFinalPosition(Velocity, Deceleration)), Deceleration));
 
 var Items = document.querySelectorAll("li");
 var ContainerWidth = 700;
@@ -154,7 +151,10 @@ Body.addEventListener("mouseup", function() {
   if (Velocity > 0 && GetTime() - LastTime < 0.1) {
     console.log("Fling");
     Animating = true;
-    var Idx = GetClosestCardIdx(CurrentScroll - Direction*GetFlingFinalPosition(Velocity, Deceleration));
+    var Idx = GetClosestCardIdx((CurrentScroll + ContainerWidth/2) - Direction*GetFlingFinalPosition(Velocity, Deceleration));
+    if (Idx == GetClosestCardIdx(CurrentScroll + ContainerWidth/2)) {
+      Idx = Math.max(0, Math.min(Idx-Direction, Items.length-1));
+    }
     if (GetCenterScrollPos(Idx) > CurrentScroll) {
       Direction = -1;
     } else {
@@ -175,8 +175,6 @@ Body.addEventListener("mouseup", function() {
     var CardScrollPos = GetCenterScrollPos(Idx);
     Velocity = GetFlingVelocityForTarget(Deceleration, Math.abs(CardScrollPos - CurrentScroll));
     Direction = Sign(CurrentScroll - CardScrollPos);
-    console.log(CurrentScroll - Direction*GetFlingFinalPosition(Velocity, Deceleration));
-    console.log(CardScrollPos);
     AnimationStartTime = GetTime();
     AnimationStartScroll = CurrentScroll;
     DoFrame();
